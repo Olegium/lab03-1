@@ -1,0 +1,45 @@
+cmake_minimum_required(VERSION 3.10)
+project(formatter)
+
+# Устанавливаем политику CMP0077 (для правильной обработки опций)
+if(POLICY CMP0077)
+    cmake_policy(SET CMP0077 NEW)
+endif()
+
+# Настройка стандарта C++ (например, C++17)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+# Список исходных файлов библиотеки
+set(SOURCES
+    formatter.cpp
+)
+
+# Список заголовочных файлов
+set(HEADERS
+    formatter.h
+)
+
+# Создание статической библиотеки
+add_library(formatter STATIC ${SOURCES} ${HEADERS})
+
+# Указываем include-директорию для пользователей библиотеки
+target_include_directories(formatter
+    PUBLIC 
+    ${CMAKE_CURRENT_SOURCE_DIR}
+)
+
+# Дополнительные флаги компиляции для Linux
+if(UNIX)
+    target_compile_options(formatter PRIVATE -Wall -Wextra -pedantic)
+endif()
+
+# Установка библиотеки (опционально)
+install(TARGETS formatter
+    ARCHIVE DESTINATION lib
+    LIBRARY DESTINATION lib
+)
+
+install(FILES ${HEADERS}
+    DESTINATION include/formatter
+)
